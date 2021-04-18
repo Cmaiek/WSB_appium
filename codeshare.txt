@@ -1,0 +1,610 @@
+17 i 18 kwietnia,  tester APPIUM
+
+PLAN PRZERW:
+10:00 - 10:10
+11:30 - 11:40
+12:30 - 13:00 (obiadowa)
+14:33 - 14:40
+
+testerpodyplomowe@gmail.com
+
+
+Scenariusz zajec: https://drive.google.com/file/d/1ziYq162q_Th_BfSiBlLTG0mAnWJgfwDG/view?usp=sharing
+
+Wymagania do projektu APPIUM MOBILNE oraz APLIKACJE APK oraz tools: https://drive.google.com/drive/folders/1t5ggJ0PajuBKfE2kfH0WFO48UeJIMyja?usp=sharing
+Przyklad projektu: https://www.youtube.com/watch?v=5lBOOhysKws&feature=youtu.be
+
+Linki:
+- https://spidersweb.pl/2018/02/gmail-kropki-plusy.html
+- genymotion.com
+- https://www.anymp4.com/pl/faq/enable-usb-debugging-for-android.html (opcje programistyczne ANDROID / usb debugging)
+- cloud.geny.io (ZALOZYC KONTO)
+- saucelabs.com (inny przykład - mozna wykorzystac dla projektu)
+- link do dokumentacji gmsaas CLI https://docs.genymotion.com/gmsaas/1.x/#copyright
+- alternativeto.net
+- https://developer.android.com/studio/releases/platforms
+
+Maszyny gotowe z appium na Ubuntu Linux 18.04 (Dwa obrazy), 16GB
+- https://drive.google.com/file/d/1TCJQcvhhGqr0aBexAJ-Dme68XSFB04bG/view?usp=sharing
+- https://drive.google.com/file/d/18n5LhhIJ94XLy2Q5PtkppVVRJAyrOgpu/view?usp=sharing
+
+Zajęcia:
+SaaS - Software as a Service (abonament za kompletny dostep do softu przez przegladarkę)
+PaaS - Platform as a Service (na własnej instancji chmury publicznej np. AWS, GCP, Azure, Alibaba Cloud, Heroku)
+SDK - Software Development Kit (np. Android SDK, Unity3D SDK, iOS SDK...)
+ADB (CLI dla Androida, część Android SDK)
+
+PROJEKTY 4 - wybieramy 1 z nich oceniony z programu (Technologie wykorz. w testowaniu)
+https://www.wsb.pl/warszawa/studia-i-szkolenia/studia-podyplomowe/kierunki/tester-oprogramowania/program-studiow
+
+
+Rozszerzenie aplikacji ANDROID .apk
+
+Testowane urządzenie:
+Samsung Galaxy S8 z Android 8.0
+
+CLI - command line tool
+https://alternativeto.net/     - Alternatywna aplikacj np. do appsee.com
+
+
+
+
+
+POLECENIA - cwiczenia praktyczne:
+1) Przygotowanie genymotion oraz CLI gmsaas oraz Android SDK
+
+sudo apt install python3-pip
+pip3 install gmsaas
+
+
+Konfigi dla BASHRC:
+gedit ~/.bashrc
+
+na koncu pliku dodać to co poniżej i zapisać oraz uruchomic ponownie terminal i wtedy odpalic polecenie: gmsaas 
+## gedit ~/.bashrc
+export PATH="$HOME/.local/bin/:$PATH"
+
+(dla MAC : export PATH="$PATH:~/bin" )
+
+Zaloguj sie do genymotion cloud zdalnie za pomocą CLI gmsaas:
+gmsaas auth login EMAILUZYTYDOKONTAGENYMOTION@EMAIL.COM (WYKONAC PONOWNIE GDY NOWE KONTO JEST ZALOZONE)
+
+Pobrać: https://developer.android.com/studio
+
+- rozpakować archiwum z android studio na pulpicie
+
+Nastepne kroki:
+- w terminalu wejsc do sciezki: cd /home/tester/Desktop/android-studio/bin
+- uruchomic program startujący Android Studio za pomocą polecenia: ./studio.sh
+- przejść next next kroki az do uruchomienia projektu (po drodze doinstaluja sie pakiety i paczki i android SDK) 
+
+
+Dygresja na temat Android Studio na Linuxie (Ubuntu)
+https://developer.android.com/studio/install
+
+Uruchom terminalu: ./studio.sh 
+scieżka - wejść do: bin
+
+
+Doinstalowanie brakujacych dla Ubuntu biblioteczki
+
+sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386
+
+
+Weryfikacja SDK zainstalowanego:
+cd /home/tester/Android/Sdk/
+
+Sprawdzic lokalizacje uiautomatorviewer
+cd /home/tester/Android/Sdk/tools/bin
+
+
+2) Praca z gmsaas - wiersz polecen do zdalnej obsługi urzadzenia wirtualnego z Androidem
+
+Dokumentacja 
+https://docs.genymotion.com/gmsaas/1.x/01_Get_Started.html
+
+Konfiguracja sciezki:
+gmsaas config set android-sdk-path /home/tester/Android/Sdk/
+
+Sprawdzenie ustawienia
+gmsaas config list
+
+https://docs.genymotion.com/gmsaas/1.x/03_Commands.html
+
+- Wypisz konfiguracje androidów z genymotion
+gmsaas recipes list
+
+- Odfiltrowanie wybranej konfiguracji urzadzenia z genymotion cloud
+gmsaas recipes list | grep "Galaxy S8"
+
+- Uruchomienie zdalne instancji
+gmsaas instances start <recipe_uuid> <name>
+
+- Zatrzymanie zdalne instancji aktualne działających:
+gmsaas instances list -q | xargs -n1 gmsaas instances stop --no-wait
+
+* zatrzymanie dzialania dla konkretnej instancji:
+gmsaas instances stop <instance_uuid>
+
+Wyświetlenie aktualnie działających "instancji"
+gmsaas instances list
+
+3) Praca z ADB:
+w pliku bashrc za pomoca polecenia:
+gedit ~/.bashrc
+
+dodać na koncu pliku:a
+## android config 
+export ANDROID_HOME=/home/tester/Android/Sdk/
+export PATH=${PATH}:/home/tester/Android/Sdk/build-tools
+export PATH=${PATH}:/home/tester/Android/Sdk/tools
+export PATH=${PATH}:/home/tester/Android/Sdk/platform-tools
+
+Sprawdzenie po urchomieniu ponownym terminala:
+echo $ANDROID_HOME
+echo $PATH
+
+Android Debug Bridge - polecenia przykladowe na adbshell.com
+adb
+adb devices
+
+
+Zadanie/cwiczenie z ADB i Genymotion i gmsaas:
+			
+1. Uruchom zdalnie urządzenie z genymotion za pomoca gmsaas
+2. Połącz się z ADB gdy instancja aktualnie jest uruchomiona
+
+gmsaas instances list -q | xargs -n1 gmsaas instances adbconnect
+
+lub
+
+gmsaas instances adbconnect <instance_uuid>
+
+3. Wywołaj polecenie wypisujące liste aktgualnie podłączenych Androidowych urzadzen do komputera (rowniez fizyczne i wirtualne)
+adb devices
+
+* pokazuje nam port localhost:XYZQAZ
+
+4. Sprawdz dostepne aplikacje androidowe (pliki o rozszerzeniu .apk)
+adb shell pm list packages
+
+4* Zainstaluj aplikacje dwie (ApiDemos oraz contactmanager) i sprawdz czy sa w pakietach czyli wykonaj polecenie z linijki wyzej
+
+5. Wyłącz instację 
+gmsaas instances list -q | xargs -n1 gmsaas instances stop --no-wait
+lub
+gmsaas instances stop [--no-wait] <instance_uuid>
+
+
+Przydatne polecenia z ADB 
+https://adbshell.com/
+
+
+(4) Konfiguracja Pythona + Selenium + IDE: Pycharm/Atom (TEST SCRIPT CONFIGURATIONS)
+
+  - instalacja biblioteki klienckiej Appium dla Pythona:
+  pip3 install Appium-Python-Client
+
+  python3 (wejscie do konsoli pythona)
+  import selenium
+  help(selenium)
+  exit()
+
+======
+
+
+Poniżej wersja TYLKO dla systemu: macOS
+export ANDROID_HOME=/Users/nazwauzytkownika/Library/Android/sdk
+export PATH=$ANDROID_HOME/tools:$PATH
+export PATH=$ANDROID_HOME/tools/bin:$PATH
+export PATH=$ANDROID_HOME/platform-tools:$PATH
+# dla javy:
+export JAVA_HOME=$(/usr/libexec/java_home)
+
+=======
+
+
+  5) Konfiguracja nodejs + npm
+  -Pobrać node ze strony https://nodejs.org/en/
+  wersję po lewej stronie (14.16 LTS)
+
+  - rozpakować archiwum w Pobranych
+
+  Sprawdzenia wersji: {werjsa 10 jest za mała, musi być wersja większa od 12.Uwaga:nie istalować przez get install bo ma ograniczenia i wiekszej wersji niż 10 nie zainstaluje}
+  node -v
+  npm -v
+
+  Wykonac polecenie1:
+  sudo mv /home/tester/Downloads/node-v14.16.0-linux-x64/lib/node_modules/ /usr/local/lib
+
+  później sprawdz czy folder node_modules zostal przeniesiony do sciezki /usr/local/lib
+
+  Wykonac polecenie2:
+  sudo mv /home/tester/Downloads/node-v14.16.0-linux-x64/bin/* /usr/local/bin
+{zrobić korektę w powyższym linku na odpowiednią wersję np. "(...)v14.16.1" oraz "tester" na odpowiedni user komputera}
+
+  czasami pojawia sie ten problem - https://askubuntu.com/questions/1152570/npm-cant-find-module-semver-error-in-ubuntu-19-04
+
+  Sprawdzenia wersji:
+  node -v
+  npm -v
+
+
+===== naprawienie problemu z node/npm
+export NODE="/home/ubuntu/local/node"
+export NODE_PATH="/usr/local/lib/node_modules" 
+====
+
+
+  6) Instalacja appium / appium-doctor i appium desktop 
+
+  Instalacja appium:
+  sudo npm install -g appium
+  npm install -g appium
+
+  sprawdzenie wersji:
+  appium -v
+
+  Instalacja appium-doctor:
+  sudo npm install -g appium-doctor
+
+  sprawdzenie wersji:
+  appium-doctor --version
+
+  Uruchom i sprawdz:appium 
+  wyjscie z appium to CTRL+C
+
+  i sprawdzic appium-doctor przez polecenie:
+  appium-doctor
+
+	Install PyCharm from command line (jeśli ktoś nie ma!)
+  sudo snap install pycharm-community --classic
+
+  APPIUM INSTALACJA POPRAWIONA (jesli powyhttps://srv.buysellads.com/ads/click/x/GTND42JJFTSI4K37F6Y4YKQNC6ADE23JCWYIPZ3JCYYIE53JCTAIPK3KCVBD5K7EFTSDVK3LF6YDV5QYCYSDTKQKC6SD453UCK7DEK3EHJNCLSIZzsza nie dzialala i byly bledy)
+  sudo npm install -g appium --unsafe-perm=true --allow-root
+
+  Instalacja appium destkop: (to alternatywna forma instalacji)
+  https://github.com/appium/appium-desktop/releases
+
+  Appium-linux-1.20.2.AppImage (wrzucic na pulpit i uruchomic klienta desktopowego)
+
+
+7) JAVA konfiguracja 
+
+
+  Sprawdzenie ostateczne konfiguracji:
+  echo $JAVA_HOME
+
+  Sprawdzenie ktora wersja JAVY jest aktywna:
+  sudo update-alternatives --config java
+
+JRE - java runtime enviroment
+JDK - java development kit
+
+
+instalacja javy8:
+sudo apt install openjdk-8-jdk
+sudo apt update
+
+Sciezka do sprawdzenia javy:
+/usr/lib/jvm/
+
+W razie problemow zrobic:
+rm /var/lib/dpkg/locksudo
+
+- dodac do pliku bashrc na koncu:
+gedit ~/.bashrc
+
+tresc ponizej:
+## java config for appium
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export PATH=${PATH}:${JAVA_HOME}/bin
+
+uruchom ponownie terminal
+
+Sprawdzic nr wersji:
+java -version
+
+Przydatne linki TYLKO dla systemu MacOS:
+brew install AdoptOpenJDK/openjdk/adoptopenjdk8 (lepsze polecenie)
+https://medium.com/@devkosal/switching-java-jdk-versions-on-macos-80bc868e686a
+
+brew cask install AdoptOpenJDK/openjdk/adoptopenjdk{8,11}
+https://chamikakasun.medium.com/how-to-manage-multiple-java-version-in-macos-e5421345f6d0
+
+
+
+Sprawdzenie kompleksowe konfiguracji !
+appium-doctor (brak czerwonych krzyzykow - docelowo)
+
+
+appium-doctor --android (TO NAS INTERESUJE)
+appium-doctor --ios
+
+8) Lokalizowanie elementow za pomoca UIAUTOMATIONVIEWER
+w sciezce: /home/tester/Android/Sdk/tools/bin
+uruchomic za pomoca ./uiautomatorviewer
+
+9) Sprawdzenie bibliotek
+pip3 freeze
+
+lub w ustawieniach interpretera w srododowisku programistym np. Pycharm lub Atom itd.
+
+
+10) Sprawdzenie ostateczne konfiguracji i środowiska
+appium-doctor --android
+
+echo $ANDROID_HOME
+echo $JAVA_HOME
+echo $PATH
+
+pip3 freeze
+node -v
+npm -v
+
+sprwdzenie exportow w pliku .bashrc
+gedit ~/.bashrc
+ - ile jest tych dodanych exportów na koncu pliku? (odpowiedź: siedem export) 
+ 
+Zalogować się do gmsaas
+gmsaas config list
+gmsaas auth
+- zalozyć konto na cloud.geny.io i ten email
+gmsaas auth login EMAILUZYTYDOKONTAGENYMOTION@EMAIL.COM (WYKONAC PONOWNIE GDY NOWE KONTO JEST ZALOZONE)
+echo $PATH
+Sprawdzenie działania:
+gmsaas recipes list | grep "Galaxy S8"gmsaas instances start b9cf7b2c-4d11-4777-97c7-29d3b5c68d59 galaxy8kamil
+
+
+11) Usprawnienia w testowaniu:
+
+Ustalenie stałych nr portow:
+port1=10000 && port2=20000 && port3=30000
+
+
+a) URUCHAMIANIE
+instancjaTest=$(gmsaas instances start b9cf7b2c-4d11-4777-97c7-29d3b5c68d59 S8Android8_Grzegorz)
+
+b) ADB CONNECT - skrot ponizej:
+gmsaas instances adbconnect $instancjaTest --adb-serial-port=$port1
+// u nas port1 lub port2 lub port3
+
+c) ZAMYKANIE URZADZENIA
+zamknijUrzadzenie=$(gmsaas instances list -q | xargs -n1 gmsaas instances stop --no-wait)
+
+12) TESTOWANIE:
+Sprawdz ponownie uruchomienie uiautomatorviewer
+1. Wejdz w sciezke:
+cd /home/tester/Android/Sdk/tools/bin
+2. Uruchom za pomoca:
+./uiautomatorviewer
+3. Strategie lokalizowania elementow:
+
+
+Przydatne linki - te dwa poniżej:
+https://appium.io/docs/en/writing-running-appium/caps/
+https://appium.io/docs/en/commands/element/find-elements/
+odczytywanie appPackage i appActivity do funkcji setUp:
+https://support.testsigma.com/support/solutions/articles/32000019977-how-to-find-app-package-and-app-activity-of-your-android-app
+
+
+BONUS:
+https://saucelabs.com/blog/advanced-locator-strategies
+http://appium.io/docs/en/commands/element/find-elements/index.html#selector-strategies (WAZNE!!!)
+http://appium.io/docs/en/commands/device/app/is-app-installed/
+
+
+Test case 1 - testowanie formularza (apka ContactManager.apk)
+
+Androidowe apki: https://drive.google.com/drive/folders/1t5ggJ0PajuBKfE2kfH0WFO48UeJIMyja?usp=sharing 
+Kroki: 
+0. Zaintaluj aplikację ContactManager i sprawdz czy zainstalowana (OK)
+1. Uruchom aplikację ContactManager 
+2. Kliknij add contact 
+3. Wprowadz poprawne/niepoprawne dane do formularza 
+4. Zapisać
+
+
+KOD - wzorzec:
+
+==========================================
+import unittest
+import os
+
+from appium import webdriver
+from time import sleep
+
+PATH = lambda p: os.path.abspath(
+    os.path.join(os.path.dirname(__file__),p)
+)
+
+class Test1Appium(unittest.TestCase):
+    def setUp(self):
+        desired_caps={}
+        desired_caps['app'] = PATH('ContactManager.apk')
+        desired_caps['platformName'] = 'Android'
+        desired_caps['deviceName'] = 'Genymotion Cloud'
+        desired_caps['udid'] = 'localhost:10000' # do uzupelnia gdyby nie byl staly
+        desired_caps['appPackages'] = 'com.example.android.contactmanager'
+        desired_caps['appActivity'] = 'com.example.android.contactmanager.ContactManager'
+
+        # polaczenie z Appium
+        self.driver = webdriver.Remote('http://localhost:4723/wd/hub',desired_caps)
+        self.driver.implicitly_wait(2)
+
+    def tearDown(self):
+        self.driver.quit()
+
+    def testForm(self):
+       
+
+
+
+
+if __name__ == 'main':
+    suite = unittest.TestLoader().loadTestsFromTestCase(Test1Appium)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+===
+
+
+PROCEDURA:
+1. Uruchamiamy urzadzenie przez gmsaas (sprawdzamy czy jest czas do wykorzystania) - instancjaTest
+2. Uruchamiamy Appium (desktopowe zalecane) z aplikacji lub pulpitu (terminal ./Appium....)
+3. Sprawdzamy polaczenie z ADB (adbconnect) oraz adb devices
+4. Uruchamiamy test RUN w IDE (pycharm...) (plik testowy w py)
+5. Zatrzymaj urządzenie (gmsaas)
+
+
+
+
+tc 1 :
+import unittest
+import os
+from appium import webdriver
+from time import sleep
+
+PATH = lambda p: os.path.abspath(
+    os.path.join(os.path.dirname(__file__), p)
+)
+
+class Test1Appium(unittest.TestCase):
+    def setUp(self):
+        desired_caps = {}
+        desired_caps['app'] = PATH('ContactManager.apk')
+        desired_caps['platformName'] = 'Android'
+        desired_caps['deviceName'] = 'Genymotion Cloud'
+        desired_caps['udid'] = 'localhost:10000'  # do uzupelnia gdyby nie byl staly
+        desired_caps['appPackages'] = 'com.example.android.contactmanager'
+        desired_caps['appActivity'] = 'com.example.android.contactmanager.ContactManager'
+
+        # polaczenie z Appium
+        self.driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
+        self.driver.implicitly_wait(2)
+
+    def tearDown(self):
+        self.driver.quit()
+
+    def testFormApp(self):
+        self.driver.is_app_installed('com.example.android.contactmanager')
+        self.driver.find_element_by_id('com.example.android.contactmanager:id/addContactButton').click()
+        textfields = self.driver.find_elements_by_class_name('android.widget.EditText')
+        textfields[0].send_keys('Tomek z Warszawy')
+        textfields[1].send_keys('222333444')
+        textfields[2].send_keys('tom@wsbwawa.pl')
+        
+        sleep(2)
+        
+        #asercja
+        self.assertEqual('Tomek z Warszawy',textfields[0].text)
+        self.assertEqual('222333444', textfields[1].text)
+        self.assertEqual('tomek@wsbwawa.pl', textfields[2].text)
+        
+        #printy dydaktyczne
+        print(textfields[0])
+        print(textfields[0].text)
+
+
+if __name__ == 'main':
+    suite = unittest.TestLoader().loadTestsFromTestCase(Test1Appium)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+    
+    
+
+Test 2 - aplikacja ApiDemos - test wifi settings:
+
+TC - testowanie ustawien wifi:
+KROKI:
+1. Otworz aplikacje ApiDemos-debug.apk
+2. Kliknij z zakladke Preference
+2. Kliknij z zakladke Preference dependencies
+3. Znajdz zaznaczalne checkboxy
+4. Zaznacz checkboxy niezaznaczone (print jezeli sa wszystkie zaznaczone a jesli nie to zaznaczyc)
+5. Wpisz 12345 jakko hasło
+6. Porównaj aktualne haslo z oczekiwanym 12345 (asercja)
+7. Kliknij OK
+8. Kliknij wstecz androidowe (na dwa sposoby albo za pomocą 'back' albo keyevents) - powrot do menu glownego
+
+
+KOD:
+import os
+import unittest
+from appium import webdriver
+from time import sleep
+
+PATH = lambda p: os.path.abspath(
+    os.path.join(os.path.dirname(__file__),p)
+)
+
+class Test2Appium(unittest.TestCase):
+    def setUp(self):
+        desired_caps={}
+        desired_caps['app'] = PATH('ApiDemos-debug.apk')
+        desired_caps['platformName'] = 'Android'
+        desired_caps['deviceName'] = 'Genymotion Cloud'
+        desired_caps['udid'] = 'localhost:10000' # do uzupelnia gdyby nie byl staly
+        desired_caps['appPackages'] = 'io.appium.android.apis'
+        desired_caps['appActivity'] = 'io.appium.android.apis.ApiDemos'
+        desired_caps['noReset'] = 'true'
+
+        # polaczenie z Appium
+        self.driver = webdriver.Remote('http://localhost:4723/wd/hub',desired_caps)
+        self.driver.implicitly_wait(2)
+
+    def tearDown(self):
+        self.driver.quit()
+
+    def testWIFI(self):
+        self.driver.find_element_by_accessibility_id('Preference').click()
+        self.driver.find_element_by_accessibility_id('3. Preference dependencies').click()
+        checkboxes = self.driver.find_elements_by_android_uiautomator('new UiSelector().checkable(true)')
+
+        for el in checkboxes:
+            is_checked = self.driver.find_element_by_id('android:id/checkbox').get_attribute('checked')
+
+            if is_checked == 'true':
+                print("Wszystkie checkboxy sa zaznaczone")
+            else:
+                el.click()
+                sleep(1)
+
+        passwordInput = '12345'
+        self.driver.find_element_by_xpath('//*[@text="WiFi settings"]').click()
+        self.driver.find_element_by_class_name('android.widget.EditText').send_keys(passwordInput)
+
+        passwordCurrent = self.driver.find_element_by_class_name('android.widget.EditText').get_attribute('text')
+        # asercja
+        self.assertEqual(passwordInput, passwordCurrent)
+        
+        self.driver.find_element_by_id('android:id/button1').click()  # potwierdz OK
+        self.driver.back()
+        self.driver.keyevent(4)  # zrob back androidowe 
+
+if __name__ == 'main':
+    suite = unittest.TestLoader().loadTestsFromTestCase(Test2Appium)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+ 
+ 
+ 
+   
+ ======UWAGA ====   
+BONUS: TC3 - NOTYFIKACJE TESTOWANIE wymagana aplikacja Appium Settings :
+
+    def test_notifications(self):
+        self.driver.open_notifications()
+        sleep(3)
+        elements = self.driver.find_elements_by_id('android:id/title')
+        print('Liczba notyfikacji wynosi' + elements.__len__().__str__())
+        title = False
+
+        for el in elements:
+            #print('element o tresci:' + el.text)
+            if el.text == 'Appium Settings':
+                title = True
+
+        self.assertTrue(title)
+        self.driver.back()
+
+        self.assertTrue(title)
+        
+        
+email do mnie testerpodyplomowe@gmail.com - > projekty przesyłać proszę do polowy czerwca 2021  
